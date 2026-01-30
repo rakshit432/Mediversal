@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'atoken'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'atoken', 'dtoken'],
   credentials: true
 }));
 

@@ -90,7 +90,7 @@ const DoctorAppointments = () => {
 
                   {/* PAYMENT */}
                   <p className="text-xs inline-block border border-primary px-2 py-0.5 rounded-full w-fit">
-                    {item.payment ? "Online" : "Cash"}
+                    {item.paymentMethod === 'Online' ? "Online" : "Cash"}
                   </p>
 
                   {/* AGE */}

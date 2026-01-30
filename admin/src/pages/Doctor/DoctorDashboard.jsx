@@ -50,7 +50,7 @@ const DoctorDashboard = () => {
           <img className="w-14" src={assets.earning_icon} alt="" />
           <div>
             <p className="text-xl font-semibold text-gray-600">
-              {dashData.earning}
+              {dashData.earning ? dashData.earning : 0}
             </p>
             <p>Earnings</p>
           </div>
@@ -60,7 +60,7 @@ const DoctorDashboard = () => {
           <img className="w-14" src={assets.appointments_icon} alt="" />
           <div>
             <p className="text-xl font-semibold text-gray-600">
-              {dashData.appointments}
+              {dashData.appointments ? dashData.appointments : 0}
             </p>
             <p>Appointments</p>
           </div>
@@ -70,7 +70,7 @@ const DoctorDashboard = () => {
           <img className="w-14" src={assets.patients_icon} alt="" />
           <div>
             <p className="text-xl font-semibold text-gray-600">
-              {dashData.patients}
+              {dashData.patients ? dashData.patients : 0}
             </p>
             <p>Patients</p>
           </div>
@@ -108,6 +108,9 @@ const DoctorDashboard = () => {
                 </p>
                 <p className="text-gray-600">
                   {slotDateFormat(item.slotDate)} {item.slotTime}
+                </p>
+                <p className='text-xs inline-block border border-primary px-2 py-0.5 rounded-full w-fit mt-1'>
+                  {item.paymentMethod === 'Online' ? "Online" : "Cash"}
                 </p>
               </div>
 

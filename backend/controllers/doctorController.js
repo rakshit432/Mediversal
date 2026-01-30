@@ -7,6 +7,7 @@ import "dotenv";
 /* ======================================================
    DOCTOR LOGIN
 ====================================================== */
+
 const loginDoctor = async (req, res) => {
   try {
     console.log("Doctor login payload:", req.body);
@@ -18,7 +19,7 @@ const loginDoctor = async (req, res) => {
     }
 
     const doctor = await doctorModel.findOne({ email });
-    console.log("Doctor from DB:", doctor);
+    console.log("Doctor found:", doctor ? doctor._id : "None");
 
     if (!doctor) {
       return res.json({ success: false, message: "Doctor not found" });
@@ -62,7 +63,7 @@ const loginDoctor = async (req, res) => {
 ====================================================== */
 const changeAvailability = async (req, res) => {
   try {
-    const {docId} = req.body;
+    const { docId } = req.body;
 
     const doctor = await doctorModel.findById(docId);
     if (!doctor) {
@@ -126,9 +127,12 @@ const appointmentComplete = async (req, res) => {
       return res.json({ success: false, message: "Unauthorized action" });
     }
 
-    await appointmentModel.findByIdAndUpdate(appointmentId, {
-      completed: true
-    });
+    const updateData = { completed: true };
+    if (!appointment.payment && appointment.paymentMethod === 'Cash') {
+      updateData.payment = true;
+    }
+
+    await appointmentModel.findByIdAndUpdate(appointmentId, updateData);
 
     res.json({ success: true, message: "Appointment completed" });
   } catch (error) {
@@ -188,7 +192,8 @@ const doctorDashboard = async (req, res) => {
         earnings += item.amount;
       }
       if (item.userId) {
-        patientSet.add(item.userId._id.toString());
+        const patientId = item.userId._id ? item.userId._id.toString() : item.userId.toString();
+        patientSet.add(patientId);
       }
     });
 

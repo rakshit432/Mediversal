@@ -19,7 +19,7 @@ const Appointment = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   const fetchDocInfo = () => {
     const foundDoc = doctors.find((doc) => doc._id === docId);
@@ -92,8 +92,8 @@ const Appointment = () => {
   useEffect(() => {
     if (docInfo) getAvailableSlots();
   }, [docInfo]);
-   
- 
+
+
   const bookAppointment = async () => {
     if (!token) {
       toast.error("Please login to book appointment");
@@ -126,50 +126,6 @@ const Appointment = () => {
         toast.success("Appointment booked successfully");
         const appointmentId = data.appointmentId;
         if (appointmentId) {
-          try {
-            const payRes = await axios.post(
-              backendUrl + '/api/user/payment-razorpay',
-              { appointmentId },
-              { headers: { token } }
-            );
-            if (payRes.data.success) {
-              const order = payRes.data.order;
-              const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY,
-                amount: order.amount,
-                currency: order.currency,
-                name: 'Appointment Payment',
-                description: 'Appointment Payment',
-                order_id: order.id,
-                receipt: order.receipt,
-                handler: async (response) => {
-                  try {
-                    const verifyRes = await axios.post(
-                      backendUrl + '/api/user/verifyRazorpay',
-                      response,
-                      { headers: { token } }
-                    );
-                    if (verifyRes.data.success) {
-                      getDoctorsData();
-                      navigate('/my-appointments');
-                    } else {
-                      toast.error(verifyRes.data.message || 'Payment verification failed');
-                    }
-                  } catch (err) {
-                    toast.error(err.message);
-                  }
-                },
-                theme: { color: "#0F766E" }
-              };
-              const rzp = new window.Razorpay(options);
-              rzp.open();
-            } else {
-              navigate('/my-appointments');
-            }
-          } catch {
-            navigate('/my-appointments');
-          }
-        } else {
           getDoctorsData();
           navigate('/my-appointments');
         }
@@ -188,7 +144,7 @@ const Appointment = () => {
       <div className="min-h-screen py-8 px-4">
         <div className="max-w-6xl mx-auto border-width-2px border-teal-600 rounded-lg p-6 bg-white">
           <div className="flex flex-col lg:flex-row gap-6">
-            
+
             <div className="lg:w-1/3">
               <img
                 className="w-full h-80 object-cover bg-teal-100 border-teal-200 rounded-lg"
@@ -212,11 +168,10 @@ const Appointment = () => {
                   <button
                     key={idx}
                     onClick={() => setSelectedDayIndex(idx)}
-                    className={`px-4 py-2 rounded-lg border ${
-                      selectedDayIndex === idx
+                    className={`px-4 py-2 rounded-lg border ${selectedDayIndex === idx
                         ? 'bg-teal-600 text-white'
                         : 'bg-gray-100 text-gray-800'
-                    }`}
+                      }`}
                   >
                     {daysOfWeek[day.date.getDay()]}, {months[day.date.getMonth()]} {day.date.getDate()}
                   </button>

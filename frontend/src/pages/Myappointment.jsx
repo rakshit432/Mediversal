@@ -90,8 +90,9 @@ const Myappointment = () => {
           toast.error("Payment verification failed");
         }
       },
-      theme: { color: "#0F766E" }
+      theme: { color: "#09403bff" }
     };
+    
 
     const rzp = new window.Razorpay(options);
     rzp.open();

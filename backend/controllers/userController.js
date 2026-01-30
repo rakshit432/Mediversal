@@ -1,4 +1,5 @@
 import validator from 'validator';
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import userModel from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
@@ -255,6 +256,9 @@ const cancelAppointment = async (req, res) => {
 /* ======================================================
    RAZORPAY
 ====================================================== */
+/* ======================================================
+   RAZORPAY
+====================================================== */
 const getRazorpayInstance = () =>
   new razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -265,6 +269,10 @@ const paymentrazorpay = async (req, res) => {
   try {
     const { appointmentId } = req.body;
     const appointment = await appointmentModel.findById(appointmentId);
+
+    if (!appointment || appointment.cancelled) {
+      return res.json({ success: false, message: "Appointment cancelled or not found" });
+    }
 
     const razorpayInstance = getRazorpayInstance();
     const order = await razorpayInstance.orders.create({
@@ -283,16 +291,31 @@ const paymentrazorpay = async (req, res) => {
 
 const verifyRazorpay = async (req, res) => {
   try {
-    const { razorpay_order_id } = req.body;
-    const razorpayInstance = getRazorpayInstance();
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-    const order = await razorpayInstance.orders.fetch(razorpay_order_id);
-    if (order.status === "paid") {
-      await appointmentModel.findByIdAndUpdate(order.receipt, { payment: true });
-      return res.json({ success: true, message: "Payment successful" });
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest('hex');
+
+    const isAuthentic = expectedSignature === razorpay_signature;
+
+    if (isAuthentic) {
+      const razorpayInstance = getRazorpayInstance();
+      const order = await razorpayInstance.orders.fetch(razorpay_order_id);
+
+      if (order.receipt) {
+        await appointmentModel.findByIdAndUpdate(order.receipt, { payment: true, paymentMethod: "Online" });
+        return res.json({ success: true, message: "Payment successful" });
+      } else {
+        return res.json({ success: false, message: "Appointment mapping failed" });
+      }
+
+    } else {
+      return res.json({ success: false, message: "Payment verification failed" });
     }
-
-    res.json({ success: false, message: "Payment failed" });
 
   } catch (error) {
     console.log(error);
