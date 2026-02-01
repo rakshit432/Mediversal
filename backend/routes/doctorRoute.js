@@ -9,7 +9,7 @@ import {
   doctorProfile,
   updateDoctorProfile,
   changeAvailability,
-} from "../controllers/doctorController.js";
+} from "../controllers/doctor-controller.js";
 
 import authDoctor from "../middlewares/authDoctor.js";
 
