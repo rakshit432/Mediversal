@@ -8,8 +8,8 @@ import {
   doctorDashboard,
   doctorProfile,
   updateDoctorProfile,
-  changeAvailability, 
-} from "../controllers/doctorcontroller.js";
+  changeAvailability,
+} from "../controllers/doctorController.js";
 
 import authDoctor from "../middlewares/authDoctor.js";
 
