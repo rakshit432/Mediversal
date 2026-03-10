@@ -28,6 +28,8 @@
 ## 📖 About the Project
 
 Mediversal aims to simplify healthcare access. Patients can browse doctors, book appointments, and even use an AI assistant to analyze symptoms before booking. Doctors and Admins have their own dedicated panels to manage appointments, availability, and system data.
+Admin Frontend : https://mediversal-n29o.vercel.app
+User Frontend : https://mediversal-tf2h.vercel.app
 
 ---
 
