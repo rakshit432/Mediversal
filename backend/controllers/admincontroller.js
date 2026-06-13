@@ -144,6 +144,14 @@ const appointmentCancel = async (req, res) => {
         if (!appointmentData) {
             return res.json({ success: false, message: "Appointment not found" });
         }
+
+        if (appointmentData.cancelled) {
+            return res.json({ success: false, message: "Appointment is already cancelled" });
+        }
+
+        if (appointmentData.completed) {
+            return res.json({ success: false, message: "Completed appointments cannot be cancelled" });
+        }
         
         const docData = await doctorModel.findById(appointmentData.docId);
         if (!docData) {

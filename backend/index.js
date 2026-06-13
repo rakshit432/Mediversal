@@ -2,6 +2,8 @@ import "dotenv/config"; // ✅ MUST BE FIRST
 
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
 
@@ -21,6 +23,18 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 // middlewares
+app.use(helmet());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300, // Limit each IP to 300 requests per 15 minutes
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many requests from this IP, please try again after 15 minutes" }
+});
+app.use(limiter);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

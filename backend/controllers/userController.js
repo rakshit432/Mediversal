@@ -231,6 +231,14 @@ const cancelAppointment = async (req, res) => {
       return res.json({ success: false, message: "Unauthorized" });
     }
 
+    if (appointment.cancelled) {
+      return res.json({ success: false, message: "Appointment is already cancelled" });
+    }
+
+    if (appointment.completed) {
+      return res.json({ success: false, message: "Completed appointments cannot be cancelled" });
+    }
+
     const doc = await doctorModel.findById(appointment.docId);
     let slots_booked = doc.slots_booked || {};
 

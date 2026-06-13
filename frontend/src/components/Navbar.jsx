@@ -15,11 +15,11 @@ const Navbar = () => {
   };
 
   const navLinkStyle = ({ isActive }) =>
-    `text-sm font-medium transition ${
+    `text-xs font-bold tracking-wider transition-all duration-200 relative py-1 hover:text-teal-700 ${
       isActive
-        ? 'text-teal-700 border-b-2 border-teal-700'
-        : 'text-gray-600 hover:text-teal-700'
-    }`;
+        ? 'text-teal-700 after:w-full'
+        : 'text-gray-600 after:w-0'
+    } after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-teal-700 after:transition-all after:duration-300 hover:after:w-full`;
 
   return (
     <header className="border-b bg-white sticky top-0 z-50">
@@ -97,10 +97,10 @@ const Navbar = () => {
             ) : (
               <button
                 onClick={() => navigate('/login')}
-                className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium 
-                           rounded-full px-5 py-2 shadow transition"
+                className="bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-semibold tracking-wide 
+                           rounded-full px-6 py-2.5 shadow-md shadow-teal-700/10 hover:shadow-lg hover:shadow-teal-700/20 hover:scale-105 transition-all duration-200 cursor-pointer"
               >
-                Create Account
+                CREATE ACCOUNT
               </button>
             )}
           </div>

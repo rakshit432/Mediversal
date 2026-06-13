@@ -7,20 +7,23 @@ export default function Doctor() {
   const { speciality } = useParams();
   const navigate = useNavigate();
   const [filteredDoc, setFilteredDoc] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   /* ================= FILTER ================= */
   useEffect(() => {
+    let filtered = doctors;
     if (speciality && doctors.length) {
-      setFilteredDoc(
-        doctors.filter(
-          (doc) =>
-            doc.speciality.toLowerCase() === speciality.toLowerCase()
-        )
+      filtered = filtered.filter(
+        (doc) => doc.speciality.toLowerCase() === speciality.toLowerCase()
       );
-    } else {
-      setFilteredDoc(doctors);
     }
-  }, [doctors, speciality]);
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(
+        (doc) => doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    setFilteredDoc(filtered);
+  }, [doctors, speciality, searchQuery]);
 
   return (
     <div className="px-6 py-6">
@@ -60,59 +63,89 @@ export default function Doctor() {
 
         {/* ================= DOCTOR CARDS GRID ================= */}
         <div className="lg:col-span-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 place-items-start">
-
-            {filteredDoc.map((item) => (
-              <div
-                key={item._id}
-                onClick={() => navigate(`/appointment/${item._id}`)}
-                className="
-                  bg-white shadow-md rounded-xl p-4 
-                  flex flex-col items-center 
-                  cursor-pointer hover:shadow-lg transition
-                  w-full max-w-[260px]
-                "
-              >
-                {/* Image */}
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded-full mb-3"
-                />
-
-                {/* Status */}
-                <div className="flex items-center gap-2 text-xs">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      item.available ? "bg-green-500" : "bg-gray-400"
-                    }`}
-                  ></span>
-                  <p
-                    className={`font-medium ${
-                      item.available ? "text-green-600" : "text-gray-500"
-                    }`}
-                  >
-                    {item.available ? "Available" : "Not Available"}
-                  </p>
-                </div>
-
-                {/* Name & Speciality */}
-                <p className="mt-2 font-semibold text-gray-800 text-center">
-                  {item.name}
-                </p>
-                <p className="text-gray-500 text-sm text-center">
-                  {item.speciality}
-                </p>
-              </div>
-            ))}
-
+          {/* SEARCH BAR */}
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Search doctors by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full max-w-md p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm bg-white shadow-sm"
+            />
           </div>
 
-          {/* Empty State */}
-          {filteredDoc.length === 0 && (
-            <p className="text-center text-gray-500 mt-12">
-              No doctors found for this speciality
-            </p>
+          {doctors.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 w-full col-span-full">
+              <div className="w-10 h-10 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-slate-500 text-sm mt-4 font-medium">Fetching medical specialists...</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 place-items-start">
+                {filteredDoc.map((item) => (
+                  <div
+                    key={item._id}
+                    onClick={() => navigate(`/appointment/${item._id}`)}
+                    className="bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-teal-500/30 transition-all duration-300 rounded-2xl overflow-hidden cursor-pointer flex flex-col w-full max-w-[280px]"
+                  >
+                    {/* Image background wrapper */}
+                    <div className="w-full bg-teal-50/50 p-4 flex justify-center border-b border-slate-50 relative group">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-24 h-24 object-cover rounded-full border-4 border-white shadow-sm transition-transform duration-300 group-hover:scale-105"
+                      />
+                      {/* Status badge absolute */}
+                      <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm border border-slate-100 px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+                        {item.available ? (
+                          <span className="flex h-2 w-2 relative">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                          </span>
+                        ) : (
+                          <span className="h-2 w-2 rounded-full bg-slate-300"></span>
+                        )}
+                        <span className={`text-[10px] font-bold ${item.available ? 'text-green-600' : 'text-slate-400'}`}>
+                          {item.available ? 'Available' : 'Busy'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Details */}
+                    <div className="p-4 flex flex-col flex-1">
+                      <p className="font-bold text-slate-800 hover:text-teal-700 transition text-sm">
+                        {item.name}
+                      </p>
+                      <p className="text-teal-600 font-semibold text-xs mt-0.5">
+                        {item.speciality}
+                      </p>
+                      <p className="text-slate-400 text-xs mt-2 line-clamp-2 leading-relaxed">
+                        {item.degree || "MBBS"} • {item.experience || "5"} Yrs Exp
+                      </p>
+                      
+                      {/* Action Button layout at bottom */}
+                      <div className="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+                        <span className="text-teal-700 text-xs font-bold bg-teal-50 px-2.5 py-1 rounded-md">
+                          ${item.fees || "50"} Consultation
+                        </span>
+                        <span className="text-xs text-teal-600 font-bold hover:translate-x-0.5 transition duration-150">
+                          Book →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Empty State */}
+              {filteredDoc.length === 0 && (
+                <div className="text-center py-16">
+                  <p className="text-gray-500 font-medium text-sm">
+                    No specialist doctors match your query.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

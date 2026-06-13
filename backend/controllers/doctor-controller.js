@@ -127,6 +127,14 @@ const appointmentComplete = async (req, res) => {
       return res.json({ success: false, message: "Unauthorized action" });
     }
 
+    if (appointment.cancelled) {
+      return res.json({ success: false, message: "Cannot complete a cancelled appointment" });
+    }
+
+    if (appointment.completed) {
+      return res.json({ success: false, message: "Appointment is already completed" });
+    }
+
     const updateData = { completed: true };
     if (!appointment.payment && appointment.paymentMethod === 'Cash') {
       updateData.payment = true;
@@ -141,9 +149,7 @@ const appointmentComplete = async (req, res) => {
   }
 };
 
-/* ======================================================
-   CANCEL APPOINTMENT
-====================================================== */
+/* ================= CANCEL APPOINTMENT ================= */
 const appointmentCancel = async (req, res) => {
   try {
     const docId = req.docId;
@@ -152,6 +158,14 @@ const appointmentCancel = async (req, res) => {
     const appointment = await appointmentModel.findById(appointmentId);
     if (!appointment || appointment.docId.toString() !== docId) {
       return res.json({ success: false, message: "Unauthorized action" });
+    }
+
+    if (appointment.completed) {
+      return res.json({ success: false, message: "Cannot cancel a completed appointment" });
+    }
+
+    if (appointment.cancelled) {
+      return res.json({ success: false, message: "Appointment is already cancelled" });
     }
 
     await appointmentModel.findByIdAndUpdate(appointmentId, {

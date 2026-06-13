@@ -12,20 +12,20 @@ const SpecialityMenu = () => {
         and schedule your appointment hassle-free.
       </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-8">
+      <div className="flex flex-wrap justify-center gap-6 mt-8">
         {specialityData.map((item, index) => (
           <Link 
             key={index} 
-            to={`/doctors`}
-            onClick={() => {scrollTo(0,0)}}
-            className="flex flex-col items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+            to={`/doctors/${item.speciality}`}
+            onClick={() => { window.scrollTo(0, 0); }}
+            className="flex flex-col items-center justify-center bg-white p-5 border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:border-teal-500/20 hover:-translate-y-1 hover:scale-105 transition-all duration-300 w-36 cursor-pointer"
           >
             <img 
               src={item.image} 
               alt={item.speciality} 
-              className="w-20 h-20 object-contain mb-2" 
+              className="w-16 h-16 object-contain mb-3" 
             />
-            <p className="font-medium text-gray-800">{item.speciality}</p>
+            <p className="font-semibold text-gray-700 text-xs text-center">{item.speciality}</p>
           </Link>
         ))}
       </div>

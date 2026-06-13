@@ -12,7 +12,7 @@ const appointmentSchema = new mongoose.Schema({
   cancelled: { type: Boolean, default: false },
   payment: { type: Boolean, default: false },
   paymentMethod: { type: String, default: 'Cash' },
-  isCompleted: { type: Boolean, default: false }
+  completed: { type: Boolean, default: false }
 })
 
 const appointmentModel = mongoose.model('appointments', appointmentSchema);
