@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -39,20 +39,24 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   const { atoken, dToken } = useContext(AdminContext);
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if current path belongs to admin or doctor panel
-  const isAdminRoute = location.pathname.startsWith('/admin-dashboard') || 
-                       location.pathname.startsWith('/add-doctor') || 
-                       location.pathname.startsWith('/doctor-list') || 
+  const isAdminRoute = location.pathname.startsWith('/admin-dashboard') ||
+                       location.pathname.startsWith('/add-doctor') ||
+                       location.pathname.startsWith('/doctor-list') ||
                        location.pathname.startsWith('/all-appointments');
 
-  const isDoctorRoute = location.pathname.startsWith('/doctor-dashboard') || 
-                        location.pathname.startsWith('/doctor-appointments') || 
+  const isDoctorRoute = location.pathname.startsWith('/doctor-dashboard') ||
+                        location.pathname.startsWith('/doctor-appointments') ||
                         location.pathname.startsWith('/doctor-profile');
 
-  const isAdminLoginRoute = location.pathname === '/admin-login';
+  const isAdminLoginRoute = location.pathname === '/admin-login' || location.pathname === '/admin';
 
   const isPanelRoute = isAdminRoute || isDoctorRoute;
+
+  // Close sidebar on route change (mobile)
+  React.useEffect(() => { setSidebarOpen(false); }, [location.pathname]);
 
   // Protected Route Wrapper for Admin
   const AdminRoute = ({ children }) => {
@@ -67,14 +71,14 @@ function App() {
   return (
     <>
       <ToastContainer />
-      
+
       {/* RENDER ADMIN / DOCTOR PANEL LAYOUT */}
       {isPanelRoute ? (
-        <div className="bg-slate-50 min-h-screen flex flex-col">
-          <AdminNavbar />
-          <div className="flex flex-1 items-stretch">
-            <AdminSidebar />
-            <div className="flex-1 p-6 overflow-y-auto">
+        <div className="bg-slate-50 h-screen flex flex-col overflow-hidden">
+          <AdminNavbar onMenuToggle={() => setSidebarOpen(o => !o)} />
+          <div className="flex flex-1 overflow-hidden">
+            <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            <div className="flex-1 p-4 sm:p-6 overflow-y-auto min-w-0">
               <Routes>
                 {/* Admin Routes */}
                 <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
@@ -109,6 +113,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/my-profile" element={<Myprofile />} />
               
+              {/* Admin redirect */}
+              <Route path="/admin" element={<Navigate to="/admin-login" replace />} />
+
               {/* Admin Login route */}
               <Route 
                 path="/admin-login" 

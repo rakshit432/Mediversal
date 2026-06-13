@@ -16,7 +16,7 @@ const DoctorsList = () => {
   }, [atoken]);
 
   return (
-    <div className="p-5 h-[calc(100vh-80px)] overflow-y-auto w-full">
+    <div className="w-full">
 
       {/* ===== HEADER ===== */}
       <div className="mb-6">
@@ -39,45 +39,47 @@ const DoctorsList = () => {
           {doctors.map((doctor) => (
             <div
               key={doctor._id}
-              className="group bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+              className="glass-panel hover:bg-white hover:-translate-y-1.5 hover:border-teal-500/30 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden cursor-pointer flex flex-col group"
             >
               {/* IMAGE */}
-              <div className="w-full h-48 bg-slate-50 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-48 bg-gradient-to-b from-teal-50/20 to-teal-50/60 flex items-end justify-center relative overflow-hidden border-b border-slate-100 pt-3 px-3 pb-0">
                 <img
                   src={doctor.image}
                   alt={doctor.name}
-                  className="h-full w-full object-cover group-hover:scale-103 transition-transform duration-300"
+                  className="w-full h-full object-contain object-bottom transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
 
               {/* CONTENT */}
-              <div className="p-4 text-slate-700">
-                <p className="text-lg font-bold text-slate-800">
+              <div className="p-4 flex flex-col flex-1 text-center items-center text-slate-700">
+                <p className="font-bold text-slate-800 group-hover:text-teal-600 transition-colors duration-200 text-sm truncate w-full">
                   {doctor.name}
                 </p>
-                <p className="text-xs font-semibold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full inline-block mt-1">
-                  {doctor.speciality}
-                </p>
+                <div className="mt-1.5">
+                  <span className="text-teal-650 font-bold text-[10px] tracking-wide bg-teal-50/60 border border-teal-100/50 px-2.5 py-0.5 rounded-full">
+                    {doctor.speciality}
+                  </span>
+                </div>
 
                 {/* AVAILABILITY */}
-                <div className="mt-4 pt-3 border-t border-slate-50">
-                  <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                <div className="mt-4 pt-3 border-t border-slate-100 w-full flex justify-center">
+                  <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer select-none text-slate-600">
                     <input
                       type="checkbox"
                       checked={doctor.available}
                       disabled={doctor.loading}
                       onChange={() => changeAvailablity(doctor._id)}
-                      className="accent-teal-600 disabled:cursor-not-allowed w-4 h-4 cursor-pointer"
+                      className="accent-teal-600 disabled:cursor-not-allowed w-3.5 h-3.5 cursor-pointer"
                     />
 
                     <span
                       className={
                         doctor.available
-                          ? 'text-emerald-600 font-bold text-xs'
-                          : 'text-rose-500 font-bold text-xs'
+                          ? 'text-emerald-600 font-bold'
+                          : 'text-rose-500 font-bold'
                       }
                     >
-                      {doctor.available ? 'Available' : 'Not Available'}
+                      {doctor.available ? 'Available' : 'Busy'}
                     </span>
                   </label>
                 </div>

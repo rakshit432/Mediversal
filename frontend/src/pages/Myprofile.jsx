@@ -100,7 +100,7 @@ const Myprofile = () => {
   if (loading || !userData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-teal-700 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -109,13 +109,13 @@ const Myprofile = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-6">
-      <div className="max-w-3xl mx-auto bg-white border border-slate-100 rounded-3xl shadow-xl p-6 sm:p-8">
+    <div className="min-h-screen py-12 px-6">
+      <div className="max-w-3xl mx-auto glass-panel rounded-3xl shadow-xl p-6 sm:p-8 border border-slate-200 bg-white/70 backdrop-blur-xl">
 
         {/* PROFILE HEADER */}
         <div className="flex flex-col items-center border-b border-slate-100 pb-8 mb-8">
           {isEdit ? (
-            <label htmlFor="image" className="cursor-pointer relative group block w-32 h-32 rounded-full overflow-hidden border-4 border-teal-50 shadow-md">
+            <label htmlFor="image" className="cursor-pointer relative group block w-32 h-32 rounded-full overflow-hidden border-4 border-slate-200 shadow-md">
               <img
                 src={preview || data.image || assets.profile_pic}
                 className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
@@ -124,7 +124,7 @@ const Myprofile = () => {
               <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200">
                 <img
                   src={assets.upload_icon}
-                  className="w-8"
+                  className="w-8 filter brightness-110"
                   alt="upload"
                 />
               </div>
@@ -137,7 +137,7 @@ const Myprofile = () => {
               />
             </label>
           ) : (
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-teal-50 shadow-md">
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-200 shadow-md">
               <img
                 src={data.image || assets.profile_pic}
                 className="w-full h-full object-cover"
@@ -150,22 +150,22 @@ const Myprofile = () => {
             <input
               value={data.name}
               onChange={(e) => setFormData({ ...data, name: e.target.value })}
-              className="text-xl font-bold text-center border border-slate-200 rounded-xl px-4 py-2 mt-4 focus:outline-none focus:ring-2 focus:ring-teal-500 w-full max-w-xs text-slate-700 font-semibold"
+              className="text-xl font-bold text-center border border-slate-200 rounded-xl px-4 py-2 mt-4 focus:outline-none focus:ring-2 focus:ring-teal-500 w-full max-w-xs bg-white text-slate-700"
               placeholder="Your Name"
             />
           ) : (
             <h1 className="text-3xl font-black text-slate-800 mt-4 tracking-tight">{data.name}</h1>
           )}
 
-          <p className="text-slate-400 text-xs font-bold mt-1 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">{data.email}</p>
+          <p className="text-slate-500 text-xs font-bold mt-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">{data.email}</p>
         </div>
 
         {/* CONTACT & PERSONAL INFO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Phone */}
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition duration-200">
-            <label className="text-[10px] font-bold text-slate-400 block mb-1">PHONE NUMBER</label>
+          <div className="bg-slate-50/60 border border-slate-150 rounded-2xl p-5 hover:border-teal-500/10 transition-all duration-200">
+            <label className="text-[10px] font-bold text-slate-400 block mb-1 tracking-wider">PHONE NUMBER</label>
             {isEdit ? (
               <input
                 value={data.phone}
@@ -178,8 +178,8 @@ const Myprofile = () => {
           </div>
 
           {/* Gender */}
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition duration-200">
-            <label className="text-[10px] font-bold text-slate-400 block mb-1">GENDER</label>
+          <div className="bg-slate-50/60 border border-slate-150 rounded-2xl p-5 hover:border-teal-500/10 transition-all duration-200">
+            <label className="text-[10px] font-bold text-slate-400 block mb-1 tracking-wider">GENDER</label>
             {isEdit ? (
               <select
                 value={data.gender || ''}
@@ -197,8 +197,8 @@ const Myprofile = () => {
           </div>
 
           {/* Date of Birth */}
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition duration-200">
-            <label className="text-[10px] font-bold text-slate-400 block mb-1">DATE OF BIRTH</label>
+          <div className="bg-slate-50/60 border border-slate-150 rounded-2xl p-5 hover:border-teal-500/10 transition-all duration-200">
+            <label className="text-[10px] font-bold text-slate-400 block mb-1 tracking-wider">DATE OF BIRTH</label>
             {isEdit ? (
               <input
                 type="date"
@@ -212,17 +212,17 @@ const Myprofile = () => {
           </div>
 
           {/* Address */}
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition duration-200 md:col-span-2">
-            <label className="text-[10px] font-bold text-slate-400 block mb-1">CLINIC / HOME ADDRESS</label>
+          <div className="bg-slate-50/60 border border-slate-150 rounded-2xl p-5 hover:border-teal-500/10 transition-all duration-200 md:col-span-2">
+            <label className="text-[10px] font-bold text-slate-400 block mb-1 tracking-wider">CLINIC / HOME ADDRESS</label>
             {isEdit ? (
               <div className="space-y-2">
                 <input
                   value={data.address?.line1 || ''}
                   onChange={(e) =>
-                    setFormData({
-                      ...data,
-                      address: { ...data.address, line1: e.target.value }
-                    })
+                      setFormData({
+                        ...data,
+                        address: { ...data.address, line1: e.target.value }
+                      })
                   }
                   className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 font-semibold text-slate-700"
                   placeholder="Street / Line 1"
@@ -230,10 +230,10 @@ const Myprofile = () => {
                 <input
                   value={data.address?.line2 || ''}
                   onChange={(e) =>
-                    setFormData({
-                      ...data,
-                      address: { ...data.address, line2: e.target.value }
-                    })
+                      setFormData({
+                        ...data,
+                        address: { ...data.address, line2: e.target.value }
+                      })
                   }
                   className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 font-semibold text-slate-700"
                   placeholder="City, State / Line 2"
@@ -259,7 +259,7 @@ const Myprofile = () => {
         <div className="mt-8 flex flex-wrap gap-4 border-t border-slate-100 pt-6">
           <button
             onClick={isEdit ? updateUserProfileData : startEdit}
-            className="px-6 py-3 cursor-pointer bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold tracking-wider rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200"
+            className="px-8 py-3.5 cursor-pointer bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold tracking-wider rounded-full shadow-md hover:shadow-lg transition-all duration-200"
           >
             {isEdit ? 'SAVE CHANGES' : 'EDIT PROFILE'}
           </button>
@@ -267,7 +267,7 @@ const Myprofile = () => {
           {isEdit && (
             <button
               onClick={cancelEdit}
-              className="px-6 py-3 cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-600 text-xs font-bold tracking-wider rounded-full shadow-sm active:scale-95 transition-all duration-200"
+              className="px-8 py-3.5 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold tracking-wider rounded-full active:scale-95 transition-all duration-200"
             >
               CANCEL
             </button>

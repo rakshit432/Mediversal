@@ -3,7 +3,6 @@ import "dotenv/config"; // ✅ MUST BE FIRST
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
 
@@ -22,28 +21,29 @@ if (!process.env.JWT_SECRET) {
 const app = express();
 const port = process.env.PORT || 4000;
 
-// middlewares
-app.use(helmet());
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // Limit each IP to 300 requests per 15 minutes
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: "Too many requests from this IP, please try again after 15 minutes" }
-});
-app.use(limiter);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+// middlewares — CORS must come FIRST before helmet
 app.use(cors({
-  origin: '*', 
+  origin: (origin, callback) => {
+    // Allow all origins (mirrors request origin)
+    callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token', 'atoken', 'dtoken'],
   credentials: true
 }));
+
+// Handle preflight OPTIONS requests for all routes (Express 5 compatible)
+app.options(/.*/, cors());
+
+// Helmet — disable crossOriginResourcePolicy so it doesn't block CORS fetches
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: false,
+}));
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use('/api/admin', adminRouter);

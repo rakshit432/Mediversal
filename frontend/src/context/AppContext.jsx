@@ -1,13 +1,13 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
   const currencySymbol = "$";
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
 
   const [doctors, setDoctors] = useState([]);
@@ -22,7 +22,6 @@ const AppContextProvider = (props) => {
       const { data } = await axios.get(backendUrl + "/api/doctor/list");
 
       if (data.success) {
-        toast.success(data.message);
         setDoctors(data.doctors);
       } else {
         toast.error(data.message);
@@ -146,7 +145,6 @@ const AppContextProvider = (props) => {
   return (
     <AppContext.Provider value={value}>
       {props.children}
-      <ToastContainer />
     </AppContext.Provider>
   );
 };

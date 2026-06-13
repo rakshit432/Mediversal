@@ -7,7 +7,7 @@ export const AdminContext = createContext({});
 const AdminContextProvider = ({ children }) => {
 
   const backendUrl =
-    import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+    import.meta.env.VITE_BACKEND_URL || '';
 
   const normalizeToken = (token) => {
     if (
@@ -59,7 +59,6 @@ const AdminContextProvider = ({ children }) => {
 
       if (data.success) {
         setAppointments(data.appointments);
-        toast.success('Appointments fetched successfully');
       } else {
         toast.error(data.message || 'Failed to fetch appointments');
       }
