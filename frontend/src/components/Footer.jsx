@@ -42,9 +42,9 @@ export const Footer = () => {
                     Privacy policy
                   </li>
                   <li>
-                    <a href="https://mediversal-n29o.vercel.app" target="_blank" rel="noopener noreferrer" className="hover:text-teal-600 transition-colors duration-200">
+                    <Link to="/admin" onClick={() => window.scrollTo(0,0)} className="hover:text-teal-600 transition-colors duration-200">
                       Admin Portal
-                    </a>
+                    </Link>
                   </li>
               </ul>
           </div>
