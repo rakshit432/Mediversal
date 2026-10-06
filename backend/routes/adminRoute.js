@@ -7,7 +7,7 @@ import { adminDashboard } from '../controllers/admincontroller.js';
 
 const adminRouter = express.Router();
 
-adminRouter.post('/add-doctor', upload.single('image'), addDoctor);
+adminRouter.post('/add-doctor', authAdmin, upload.single('image'), addDoctor);
 adminRouter.get('/all-doctors', authAdmin, allDoctors);
 adminRouter.post('/login', loginAdmin);
 adminRouter.post('/change-availability', authAdmin, changeAvailability);

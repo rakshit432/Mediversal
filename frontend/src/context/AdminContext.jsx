@@ -7,7 +7,7 @@ export const AdminContext = createContext({});
 const AdminContextProvider = ({ children }) => {
 
   const backendUrl =
-    import.meta.env.VITE_BACKEND_URL || '';
+    (import.meta.env.VITE_BACKEND_URL || '').replace(/\/+$/, '');
 
   const normalizeToken = (token) => {
     if (

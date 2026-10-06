@@ -10,8 +10,9 @@ start cmd /k "cd frontend && echo Installing frontend dependencies... && npm ins
 
 echo.
 echo ==========================================================
-echo Both servers are starting up in separate terminal windows!
-echo Backend: http://localhost:4000
-echo Frontend: http://localhost:5173 or http://localhost:5174
+echo Servers are starting up in separate terminal windows!
+echo Backend API:  http://localhost:4000
+echo Web App:      http://localhost:5174 (Patient, Doctor, Admin)
+echo Admin Login:  http://localhost:5174/admin-login
 echo ==========================================================
 pause

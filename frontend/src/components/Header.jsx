@@ -3,62 +3,103 @@ import grp from '../assets/group_profiles.png';
 import arrow from '../assets/arrow_icon.svg';
 import header from '../assets/header_img.png';
 
+const STATS = [
+  { value: '100+', label: 'Verified Doctors' },
+  { value: '50k+', label: 'Happy Patients'   },
+  { value: '4.9★', label: 'Average Rating'   },
+];
+
 const Header = () => {
   return (
-    <section className="px-4 sm:px-6 mt-6 mb-12">
-      <div className="max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden relative shadow-lg border border-slate-200/60 bg-gradient-to-br from-teal-50 via-sky-50 to-indigo-50">
-        {/* Soft background glows */}
-        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-cyan-200/20 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-indigo-200/25 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-teal-200/15 rounded-full blur-[100px] pointer-events-none" />
+    <section className="px-4 sm:px-6 mt-6 mb-16 page-enter">
+      <div className="max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden relative
+                      border border-white/60 shadow-[0_8px_48px_rgba(13,148,136,0.12)]"
+           style={{ background: 'linear-gradient(140deg, #f0fdf9 0%, #ecfeff 45%, #f0f9ff 100%)' }}>
 
-        <div className="relative flex flex-col lg:flex-row items-center lg:items-end px-6 sm:px-10 lg:px-16 pt-12 pb-12 lg:pt-16 lg:pb-0">
+        {/* Ambient glow blobs */}
+        <div className="hero-blob w-[500px] h-[500px] bg-teal-300/15 -top-32 -left-32"   style={{ animationDelay: '0s'   }} />
+        <div className="hero-blob w-[400px] h-[400px] bg-cyan-300/12 -bottom-20 -right-20" style={{ animationDelay: '3s'   }} />
+        <div className="hero-blob w-[300px] h-[300px] bg-emerald-200/10 top-1/2 left-1/3"  style={{ animationDelay: '1.5s' }} />
 
-          {/* LEFT CONTENT */}
-          <div className="flex-1 flex flex-col gap-6 text-center lg:text-left max-w-xl z-10 lg:pb-16">
-            <h1 className="text-3.5xl sm:text-4.5xl lg:text-5.5xl font-black leading-tight text-slate-800 tracking-tight">
-              Book Appointment <br />
-              <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                With Trusted Specialists
-              </span>
+        <div className="relative flex flex-col lg:flex-row items-center lg:items-end
+                        px-8 sm:px-12 lg:px-16 pt-14 pb-12 lg:pt-20 lg:pb-0 gap-8">
+
+          {/* ── LEFT CONTENT ── */}
+          <div className="flex-1 flex flex-col gap-7 text-center lg:text-left max-w-xl z-10 lg:pb-16">
+
+            {/* Eyebrow pill */}
+            <div className="section-label mx-auto lg:mx-0">
+              ✦ Trusted Healthcare Platform
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black leading-[1.1] text-slate-800 tracking-tight">
+              Your Health,<br/>
+              <span className="text-grad-primary">Our Priority</span>
             </h1>
 
+            <p className="text-slate-500 text-sm sm:text-base font-medium leading-relaxed max-w-md mx-auto lg:mx-0">
+              Connect with trusted, board-certified specialists in minutes — not weeks.
+              Compassionate care, powered by intelligent technology.
+            </p>
+
             {/* Social proof */}
-            <div className="flex flex-col items-center lg:items-start gap-4">
+            <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
               <img
                 src={grp}
                 alt="trusted users"
-                className="w-36 sm:w-44 hover:scale-105 transition duration-300 filter drop-shadow-[0_4px_6px_rgba(15,118,110,0.08)]"
+                className="w-36 sm:w-40 hover:scale-105 transition duration-300 filter drop-shadow-md"
               />
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-semibold max-w-md">
-                Simply browse through our extensive list of trusted doctors and
-                schedule your appointment hassle-free in just a few clicks.
+              <p className="text-xs text-slate-500 font-semibold leading-relaxed max-w-xs text-center sm:text-left">
+                Join <span className="text-teal-600 font-black">50,000+</span> patients who have
+                already simplified their healthcare journey with Mediversal.
               </p>
             </div>
 
             {/* CTA */}
-            <a
-              href="#speciality"
-              className="inline-flex items-center gap-2.5 bg-teal-600 text-white font-bold text-xs tracking-wider
-                         px-8 py-4 rounded-full shadow-md shadow-teal-700/10 border border-teal-500/20
-                         hover:scale-105 active:scale-95 hover:bg-teal-750 transition-all duration-200 w-fit mx-auto lg:mx-0 cursor-pointer"
-            >
-              BOOK APPOINTMENT
-              <img src={arrow} alt="arrow" className="w-3.5 h-3.5 brightness-0 invert" />
-            </a>
+            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+              <a
+                href="#speciality"
+                className="btn-primary text-[11px]"
+              >
+                BOOK APPOINTMENT
+                <img src={arrow} alt="arrow" className="w-3.5 h-3.5 brightness-0 invert" />
+              </a>
+              <a
+                href="/about"
+                className="btn-outline text-[11px]"
+              >
+                LEARN MORE
+              </a>
+            </div>
+
+            {/* Stats row */}
+            <div className="flex gap-6 justify-center lg:justify-start pt-2">
+              {STATS.map(({ value, label }) => (
+                <div key={label} className="text-center lg:text-left">
+                  <p className="text-2xl font-black text-grad-primary">{value}</p>
+                  <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest mt-0.5">{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* RIGHT IMAGE */}
-          <div className="flex-1 relative mt-10 lg:mt-0 flex justify-center lg:justify-end z-10 lg:self-end">
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-100/0 to-cyan-100/10 rounded-full blur-2xl pointer-events-none" />
+          {/* ── RIGHT IMAGE ── */}
+          <div className="flex-1 relative flex justify-center lg:justify-end z-10 lg:self-end">
+            {/* Circular glow behind doctor */}
+            <div className="absolute bottom-0 right-0 lg:right-4 w-[340px] h-[340px] rounded-full
+                            bg-gradient-to-tr from-teal-200/30 to-cyan-200/20 blur-3xl pointer-events-none" />
             <img
               src={header}
-              alt="doctors"
-              className="w-full max-w-sm sm:max-w-md lg:max-w-lg object-contain px-4 hover:scale-[1.02] transition-transform duration-500 filter drop-shadow-[0_10px_20px_rgba(15,118,110,0.08)] block"
+              alt="doctors at Mediversal"
+              className="w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[440px] object-contain
+                         hover:scale-[1.02] transition-transform duration-700
+                         filter drop-shadow-[0_16px_40px_rgba(13,148,136,0.12)] block"
             />
           </div>
-
         </div>
+
+        {/* Bottom wave decoration */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 grad-primary opacity-30 rounded-b-[2.5rem]" />
       </div>
     </section>
   );

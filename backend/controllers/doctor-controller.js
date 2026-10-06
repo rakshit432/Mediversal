@@ -2,7 +2,7 @@ import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import "dotenv";
+import "dotenv/config";
 
 /* ======================================================
    DOCTOR LOGIN
@@ -63,7 +63,11 @@ const loginDoctor = async (req, res) => {
 ====================================================== */
 const changeAvailability = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const docId = req.body.docId || req.docId;
+
+    if (!docId) {
+      return res.json({ success: false, message: "Doctor ID is required" });
+    }
 
     const doctor = await doctorModel.findById(docId);
     if (!doctor) {
@@ -168,6 +172,29 @@ const appointmentCancel = async (req, res) => {
       return res.json({ success: false, message: "Appointment is already cancelled" });
     }
 
+    // Release booked slot from doctor availability
+    const doc = await doctorModel.findById(docId);
+    if (doc) {
+      let slots_booked = doc.slots_booked || {};
+      const slotDateObj = new Date(appointment.slotDate);
+      const keysToClean = [];
+
+      if (!isNaN(slotDateObj.getTime())) {
+        const [y, m, d] = slotDateObj.toISOString().split('T')[0].split('-');
+        keysToClean.push(`${Number(d)}_${Number(m)}_${y}`);
+        keysToClean.push(`${slotDateObj.getDate()}_${slotDateObj.getMonth() + 1}_${slotDateObj.getFullYear()}`);
+      }
+
+      for (const k of keysToClean) {
+        if (slots_booked[k]) {
+          slots_booked[k] = slots_booked[k].filter(t => t !== appointment.slotTime);
+          if (slots_booked[k].length === 0) delete slots_booked[k];
+        }
+      }
+
+      await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+    }
+
     await appointmentModel.findByIdAndUpdate(appointmentId, {
       cancelled: true
     });
@@ -196,7 +223,7 @@ const doctorDashboard = async (req, res) => {
     const appointments = await appointmentModel
       .find({ docId })
       .populate("userId", "name image dob")
-      .sort({ createdAt: -1 });
+      .sort({ date: -1 });
 
     let earnings = 0;
     const patientSet = new Set();
@@ -211,16 +238,19 @@ const doctorDashboard = async (req, res) => {
       }
     });
 
+    const latest = appointments.slice(0, 5).map((item) => ({
+      ...item._doc,
+      userData: item.userId || item.userData,
+    }));
+
     res.json({
       success: true,
       dashData: {
         earning: earnings,
         appointments: appointments.length,
         patients: patientSet.size,
-        latestAppointments: appointments.slice(0, 5).map((item) => ({
-          ...item._doc,
-          userData: item.userId,
-        })),
+        latestAppointments: latest,
+        latestBookings: latest,
       },
     });
   } catch (error) {
@@ -260,16 +290,26 @@ const doctorProfile = async (req, res) => {
 const updateDoctorProfile = async (req, res) => {
   try {
     const docId = req.docId;
-    const { name, speciality, experience, fees, phone, address } = req.body;
+    const { name, speciality, experience, fees, phone, address, about, available } = req.body;
 
-    await doctorModel.findByIdAndUpdate(docId, {
-      name,
-      speciality,
-      experience,
-      fees,
-      phone,
-      address,
-    });
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (speciality !== undefined) updateData.speciality = speciality;
+    if (experience !== undefined) updateData.experience = experience;
+    if (fees !== undefined) updateData.fees = Number(fees);
+    if (phone !== undefined) updateData.phone = phone;
+    if (about !== undefined) updateData.about = about;
+    if (available !== undefined) updateData.available = Boolean(available);
+
+    if (address !== undefined) {
+      try {
+        updateData.address = typeof address === 'string' ? JSON.parse(address) : address;
+      } catch {
+        updateData.address = address;
+      }
+    }
+
+    await doctorModel.findByIdAndUpdate(docId, updateData);
 
     res.json({ success: true, message: "Profile updated successfully" });
   } catch (error) {

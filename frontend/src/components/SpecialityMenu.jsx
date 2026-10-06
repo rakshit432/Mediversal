@@ -4,37 +4,61 @@ import { specialityData } from '../assets/assets'
 
 const SpecialityMenu = () => {
   return (
-    <div className="flex flex-col items-center gap-4 py-16 text-slate-700" id="speciality">
-      
-      <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
-        Find by Speciality
-      </h1>
-      <p className="text-center text-slate-500 font-medium max-w-xl">
-        Simply browse through our extensive list of trusted doctors, 
-        and schedule your appointment hassle-free.
-      </p>
+    <section className="py-20 px-4 sm:px-6" id="speciality">
+      <div className="max-w-7xl mx-auto">
 
-      <div className="flex flex-wrap justify-center gap-6 mt-8">
-        {specialityData.map((item, index) => (
-          <Link 
-            key={index} 
-            to={`/doctors/${item.speciality}`}
-            onClick={() => { window.scrollTo(0, 0); }}
-            className="flex flex-col items-center justify-center glass-panel p-5 rounded-2xl hover:border-teal-500/30 hover:-translate-y-1.5 hover:scale-105 hover:bg-white transition-all duration-300 w-36 cursor-pointer group"
-          >
-            <img 
-              src={item.image} 
-              alt={item.speciality} 
-              className="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition duration-300 filter drop-shadow-[0_4px_6px_rgba(15,118,110,0.05)] group-hover:drop-shadow-[0_4px_10px_rgba(15,118,110,0.15)]" 
-            />
-            <p className="font-bold text-slate-705 text-xs text-center group-hover:text-teal-650 transition-colors duration-300">
-              {item.speciality}
-            </p>
-          </Link>
-        ))}
+        {/* Header */}
+        <div className="text-center mb-14">
+          <div className="section-label mx-auto mb-4">
+            🩺 Specialities
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tight">
+            Find by <span className="text-grad-primary">Speciality</span>
+          </h2>
+          <p className="text-slate-500 font-medium max-w-xl mx-auto mt-3 text-sm leading-relaxed">
+            Browse our network of board-certified specialists and schedule your visit — quickly,
+            comfortably, and without the waiting room.
+          </p>
+        </div>
+
+        {/* Speciality Grid */}
+        <div className="flex flex-wrap justify-center gap-5 mt-6">
+          {specialityData.map((item, index) => (
+            <Link
+              key={index}
+              to={`/doctors/${item.speciality}`}
+              onClick={() => window.scrollTo(0, 0)}
+              className="group flex flex-col items-center gap-3 wellness-card p-6 w-36 sm:w-40 cursor-pointer"
+              style={{ animationDelay: `${index * 0.06}s` }}
+            >
+              {/* Icon ring */}
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-50 to-cyan-50
+                                border border-teal-100/80 flex items-center justify-center
+                                group-hover:scale-110 group-hover:shadow-[0_8px_20px_rgba(13,148,136,0.20)]
+                                transition-all duration-300">
+                  <img
+                    src={item.image}
+                    alt={item.speciality}
+                    className="w-9 h-9 object-contain
+                               group-hover:drop-shadow-[0_4px_10px_rgba(13,148,136,0.25)]
+                               transition duration-300"
+                  />
+                </div>
+                {/* Glow dot on hover */}
+                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-teal-400/0 to-cyan-400/0
+                                group-hover:from-teal-400/10 group-hover:to-cyan-400/10 transition-all duration-300 -z-10" />
+              </div>
+
+              <p className="font-bold text-slate-700 text-xs text-center group-hover:text-teal-700 transition-colors duration-300 leading-tight">
+                {item.speciality}
+              </p>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 
-export default SpecialityMenu 
+export default SpecialityMenu

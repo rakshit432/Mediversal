@@ -114,30 +114,32 @@ const DoctorDashboard = () => {
                 </p>
               </div>
 
-              {item.cancelled ? (
-                <p className="text-red-400 text-xs font-medium">
-                  Cancelled
-                </p>
-              ) : item.completed ? (
-                <p className="text-green-500 text-xs font-medium">
-                  Completed
-                </p>
-              ) : (
-                <div className="flex gap-2">
-                  <img
-                    onClick={() => cancelAppointment(item._id)}
-                    className="w-8 cursor-pointer"
-                    src={assets.cancel_icon}
-                    alt=""
-                  />
-                  <img
-                    onClick={() => completeAppointment(item._id)}
-                    className="w-8 cursor-pointer"
-                    src={assets.tick_icon}
-                    alt=""
-                  />
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                {item.cancelled ? (
+                  <p className="text-red-400 text-xs font-medium">
+                    Cancelled
+                  </p>
+                ) : item.completed ? (
+                  <p className="text-green-500 text-xs font-medium">
+                    Completed
+                  </p>
+                ) : (
+                  <div className="flex gap-2">
+                    <img
+                      onClick={() => cancelAppointment(item._id)}
+                      className="w-8 cursor-pointer"
+                      src={assets.cancel_icon}
+                      alt=""
+                    />
+                    <img
+                      onClick={() => completeAppointment(item._id)}
+                      className="w-8 cursor-pointer"
+                      src={assets.tick_icon}
+                      alt=""
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

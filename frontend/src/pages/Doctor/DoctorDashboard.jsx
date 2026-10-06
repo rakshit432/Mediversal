@@ -113,30 +113,32 @@ const DoctorDashboard = () => {
                 </span>
               </div>
 
-              {item.cancelled ? (
-                <span className="px-2.5 py-1 text-rose-600 bg-rose-50 text-xs font-semibold rounded-full">
-                  Cancelled
-                </span>
-              ) : item.completed ? (
-                <span className="px-2.5 py-1 text-emerald-600 bg-emerald-50 text-xs font-semibold rounded-full">
-                  Completed
-                </span>
-              ) : (
-                <div className="flex gap-2">
-                  <img
-                    onClick={() => cancelAppointment(item._id)}
-                    className="w-8 h-8 cursor-pointer hover:scale-105 transition"
-                    src={assets.cancel_icon}
-                    alt="Cancel"
-                  />
-                  <img
-                    onClick={() => completeAppointment(item._id)}
-                    className="w-8 h-8 cursor-pointer hover:scale-105 transition"
-                    src={assets.tick_icon}
-                    alt="Complete"
-                  />
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                {item.cancelled ? (
+                  <span className="px-2.5 py-1 text-rose-600 bg-rose-50 text-xs font-semibold rounded-full">
+                    Cancelled
+                  </span>
+                ) : item.completed ? (
+                  <span className="px-2.5 py-1 text-emerald-600 bg-emerald-50 text-xs font-semibold rounded-full">
+                    Completed
+                  </span>
+                ) : (
+                  <div className="flex gap-2">
+                    <img
+                      onClick={() => cancelAppointment(item._id)}
+                      className="w-8 h-8 cursor-pointer hover:scale-105 transition"
+                      src={assets.cancel_icon}
+                      alt="Cancel"
+                    />
+                    <img
+                      onClick={() => completeAppointment(item._id)}
+                      className="w-8 h-8 cursor-pointer hover:scale-105 transition"
+                      src={assets.tick_icon}
+                      alt="Complete"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

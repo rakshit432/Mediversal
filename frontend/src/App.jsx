@@ -8,6 +8,7 @@ import Doctor from './pages/Doctor';
 import Myappointment from './pages/Myappointment';
 import Appointment from './pages/Appointment';
 import Myprofile from './pages/Myprofile';
+import MyReports from './pages/MyReports';
 import NotFound from './pages/NotFound';
 
 // Patient components
@@ -32,6 +33,7 @@ import AllAppointment from './pages/Admin/AllAppointment';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorAppointments from './pages/Doctor/DoctorAppointments';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
+import PatientWorkspace from './pages/Doctor/PatientWorkspace';
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -49,7 +51,8 @@ function App() {
 
   const isDoctorRoute = location.pathname.startsWith('/doctor-dashboard') ||
                         location.pathname.startsWith('/doctor-appointments') ||
-                        location.pathname.startsWith('/doctor-profile');
+                        location.pathname.startsWith('/doctor-profile') ||
+                        location.pathname.startsWith('/doctor-patients');
 
   const isAdminLoginRoute = location.pathname === '/admin-login' || location.pathname === '/admin';
 
@@ -90,6 +93,7 @@ function App() {
                 <Route path="/doctor-dashboard" element={<DoctorRoute><DoctorDashboard /></DoctorRoute>} />
                 <Route path="/doctor-appointments" element={<DoctorRoute><DoctorAppointments /></DoctorRoute>} />
                 <Route path="/doctor-profile" element={<DoctorRoute><DoctorProfile /></DoctorRoute>} />
+                <Route path="/doctor-patients/:patientId" element={<DoctorRoute><PatientWorkspace /></DoctorRoute>} />
               </Routes>
             </div>
           </div>
@@ -112,6 +116,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/my-profile" element={<Myprofile />} />
+              <Route path="/my-reports" element={<MyReports />} />
               
               {/* Admin redirect */}
               <Route path="/admin" element={<Navigate to="/admin-login" replace />} />

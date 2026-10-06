@@ -7,7 +7,7 @@ export const DoctorContext = createContext({});
 
 const DoctorContextProvider = ({ children }) => {
   const backendUrl =
-    import.meta.env.VITE_BACKEND_URL || "";
+    (import.meta.env.VITE_BACKEND_URL || "").replace(/\/+$/, "");
 
   const { dToken, setDtoken } = useContext(AdminContext);
 

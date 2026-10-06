@@ -10,7 +10,7 @@ const AdminContextProvider = ({ children }) => {
   // BACKEND URL
   // =========================
   const backendUrl =
-    import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+    (import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000').replace(/\/+$/, '');
 
   // =========================
   // ADMIN TOKEN (EXISTING)

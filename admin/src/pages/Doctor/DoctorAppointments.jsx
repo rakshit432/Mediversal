@@ -69,7 +69,7 @@ const DoctorAppointments = () => {
               return (
                 <div
                   key={item._id}
-                  className="sm:grid sm:grid-cols-[0.5fr_2fr_1fr_1fr_3fr_1fr_1fr] flex flex-col gap-2 sm:gap-0 py-4 px-6 border-b text-gray-700"
+                  className="sm:grid sm:grid-cols-[0.5fr_2fr_1fr_1fr_3fr_1fr_1fr] flex flex-col gap-2 sm:gap-0 py-4 px-6 border-b text-gray-700 items-center"
                 >
                   {/* INDEX */}
                   <p className="hidden sm:block">
@@ -113,7 +113,7 @@ const DoctorAppointments = () => {
                   </p>
 
                   {/* ACTION */}
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     {item.cancelled ? (
                       <span className="text-red-500 text-xs font-semibold">
                         Cancelled

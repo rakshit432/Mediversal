@@ -1,12 +1,12 @@
 //API for adding a doctor by admin
 import 'dotenv/config';
 import bcrypt from 'bcrypt';
-import {v2 as cloudinary} from 'cloudinary';
 import validator from 'validator';
 import doctorModel from '../models/doctorModel.js';
 import jwt from 'jsonwebtoken';
 import appointmentModel from '../models/appointmentModel.js';
 import userModel from '../models/userModel.js';
+import { uploadToStorage } from '../config/cloudinary.js';
 
 const addDoctor = async (req,res) => {
 
@@ -35,18 +35,17 @@ const addDoctor = async (req,res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password,salt);
 
-        //upload image to cloudinary
-        cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-            api_key: process.env.CLOUDINARY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET
+        //upload image (with retry + offline local fallback)
+        const storageResult = await uploadToStorage(imageFile.path, {
+            resource_type: 'image',
+            folder: 'mediversal_doctors',
         });
 
-        const imageUpload = await cloudinary.uploader.upload(imageFile.path,{
-            resource_type:'image'
-        })
+        if (storageResult.fallback) {
+            console.warn(`[addDoctor] Used local fallback for doctor "${name}" image (reason: ${storageResult.local_fallback_reason || 'offline'})`);
+        }
 
-        const imageUrl = imageUpload.secure_url;
+        const imageUrl = storageResult.secure_url;
         const doctorData = {
             name,
             email,
@@ -57,15 +56,20 @@ const addDoctor = async (req,res) => {
             degree,
             about,
             fees,
-            address : JSON.parse(address),
+            address : typeof address === 'string' ? JSON.parse(address) : address,
             date : Date.now(),
             available: true,
-            
+            imagePublicId: storageResult.public_id,
         }
 
         const newDoctor = new doctorModel(doctorData);
         await newDoctor.save();
-        res.json({success:true,message:"Doctor added successfully"});
+        res.json({
+            success:true,
+            message: storageResult.fallback
+                ? `Doctor added (local image fallback: ${storageResult.local_fallback_reason || 'offline'})`
+                : "Doctor added successfully",
+        });
     }
 
     catch(error){
@@ -163,16 +167,21 @@ const appointmentCancel = async (req, res) => {
         const slotDateObj = appointmentData.slotDate instanceof Date 
             ? appointmentData.slotDate 
             : new Date(appointmentData.slotDate);
-        const day = slotDateObj.getDate();
-        const month = slotDateObj.getMonth() + 1;
-        const year = slotDateObj.getFullYear();
-        const slotDate = `${day}_${month}_${year}`;
+        const keysToClean = [];
+
+        if (!isNaN(slotDateObj.getTime())) {
+            const [y, m, d] = slotDateObj.toISOString().split('T')[0].split('-');
+            keysToClean.push(`${Number(d)}_${Number(m)}_${y}`);
+            keysToClean.push(`${slotDateObj.getDate()}_${slotDateObj.getMonth() + 1}_${slotDateObj.getFullYear()}`);
+        }
+
         const slotTime = appointmentData.slotTime;
-        
-        if (slots_booked[slotDate]) {
-            slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime);
-            if (slots_booked[slotDate].length === 0) {
-                delete slots_booked[slotDate];
+        for (const k of keysToClean) {
+            if (slots_booked[k]) {
+                slots_booked[k] = slots_booked[k].filter(e => e !== slotTime);
+                if (slots_booked[k].length === 0) {
+                    delete slots_booked[k];
+                }
             }
         }
         

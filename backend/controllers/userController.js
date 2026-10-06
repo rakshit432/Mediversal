@@ -3,11 +3,11 @@ import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import userModel from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
-import { v2 as cloudinary } from 'cloudinary';
 import doctorModel from '../models/doctorModel.js';
 import appointmentModel from '../models/appointmentModel.js';
 import razorpay from 'razorpay';
 import 'dotenv/config';
+import { uploadToStorage } from '../config/cloudinary.js';
 
 /* ======================================================
    REGISTER USER
@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
       password: hashedPassword
     });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET);
     res.json({ success: true, token });
 
   } catch (error) {
@@ -121,11 +121,15 @@ const updateProfile = async (req, res) => {
     }
 
     if (imageFile) {
-      const uploadRes = await cloudinary.uploader.upload(
-        imageFile.path,
-        { resource_type: 'image' }
-      );
-      updateData.image = uploadRes.secure_url;
+      const storageResult = await uploadToStorage(imageFile.path, {
+        resource_type: 'image',
+        folder: 'mediversal_users',
+      });
+      if (storageResult.fallback) {
+        console.warn(`[updateProfile] Used local fallback for user ${userId} image (reason: ${storageResult.local_fallback_reason || 'offline'})`);
+      }
+      updateData.image = storageResult.secure_url;
+      updateData.imagePublicId = storageResult.public_id;
     }
 
     const updatedUser = await userModel.findByIdAndUpdate(
@@ -240,17 +244,27 @@ const cancelAppointment = async (req, res) => {
     }
 
     const doc = await doctorModel.findById(appointment.docId);
-    let slots_booked = doc.slots_booked || {};
+    if (doc) {
+      let slots_booked = doc.slots_booked || {};
+      const slotDateObj = new Date(appointment.slotDate);
+      const keysToClean = [];
 
-    const d = new Date(appointment.slotDate);
-    const slotKey = `${d.getDate()}_${d.getMonth() + 1}_${d.getFullYear()}`;
+      if (!isNaN(slotDateObj.getTime())) {
+        const [y, m, d] = slotDateObj.toISOString().split('T')[0].split('-');
+        keysToClean.push(`${Number(d)}_${Number(m)}_${y}`);
+        keysToClean.push(`${slotDateObj.getDate()}_${slotDateObj.getMonth() + 1}_${slotDateObj.getFullYear()}`);
+      }
 
-    slots_booked[slotKey] =
-      slots_booked[slotKey]?.filter(t => t !== appointment.slotTime) || [];
+      for (const k of keysToClean) {
+        if (slots_booked[k]) {
+          slots_booked[k] = slots_booked[k].filter(t => t !== appointment.slotTime);
+          if (slots_booked[k].length === 0) delete slots_booked[k];
+        }
+      }
 
-    if (!slots_booked[slotKey].length) delete slots_booked[slotKey];
+      await doctorModel.findByIdAndUpdate(doc._id, { slots_booked });
+    }
 
-    await doctorModel.findByIdAndUpdate(doc._id, { slots_booked });
     await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
 
     res.json({ success: true, message: "Appointment cancelled" });

@@ -1,9 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;850;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 @import "tailwindcss";
 
+/* ===================== DESIGN SYSTEM TOKENS ===================== */
 @theme {
   --font-sans: 'Outfit', sans-serif;
-  --color-primary: #0EA5E9; /* Cyan 500 */
+  --font-serif: 'Lora', serif;
+
+  /* Primary Brand Palette — Deep Teal Wellness */
+  --color-primary:   #0d9488;
+  --color-primary-dark: #0f766e;
+  --color-primary-deep: #134e4a;
+  --color-accent:    #06b6d4;
+  --color-glow:      #5eead4;
+
+  /* Custom teal shades */
   --color-teal-650: #0d9488;
   --color-teal-655: #0d9488;
   --color-teal-660: #0f766e;
@@ -15,71 +25,261 @@
   --color-emerald-450: #34d399;
 }
 
+/* ===================== GLOBAL BASE ===================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(20, 184, 166, 0.04) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.04) 0px, transparent 50%);
+  background-color: #f4f9f8;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(13,148,136,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 110%, rgba(6,182,212,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(94,234,212,0.04) 0%, transparent 70%);
   background-attachment: fixed;
   color: #0f172a;
-  position: relative;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Subtle cinematic grain */
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -10;
-  background-image: radial-gradient(rgba(14, 165, 233, 0.06) 1.2px, transparent 1.2px);
-  background-size: 24px 24px;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.35;
 }
 
-.active hr{
-  display:  block;
-}
-
-/* Custom Glassmorphism Utility - Light Tech Theme */
+/* ===================== GLASSMORPHISM ===================== */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(14, 165, 233, 0.08);
-  box-shadow: 0 10px 30px -10px rgba(148, 163, 184, 0.12);
+  background: rgba(255, 255, 255, 0.74);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  box-shadow: 0 4px 24px -4px rgba(13,148,136,0.08), 0 1px 4px rgba(0,0,0,0.04);
 }
 
 .glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 .glass-panel-hover:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(14, 165, 233, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 20px 45px -15px rgba(148, 163, 184, 0.22);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(13,148,136,0.18);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 20px 50px -12px rgba(13,148,136,0.14), 0 4px 16px rgba(0,0,0,0.05);
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ===================== WELLNESS CARD ===================== */
+.wellness-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(240,253,250,0.88) 100%);
+  border: 1px solid rgba(13,148,136,0.10);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px -8px rgba(13,148,136,0.10), 0 2px 8px rgba(0,0,0,0.04);
+  transition: all 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.wellness-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px -12px rgba(13,148,136,0.18), 0 4px 12px rgba(0,0,0,0.06);
+  border-color: rgba(13,148,136,0.20);
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.5);
+/* ===================== GRADIENT UTILITIES ===================== */
+.grad-primary { background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%); }
+.grad-hero    { background: linear-gradient(140deg, #f0fdf9 0%, #ecfeff 40%, #f0f9ff 100%); }
+
+.text-grad-primary {
+  background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-grad-warm {
+  background: linear-gradient(135deg, #134e4a 0%, #0e7490 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* ===================== GLOW ===================== */
+.glow-teal { box-shadow: 0 0 28px rgba(13,148,136,0.28), 0 0 8px rgba(13,148,136,0.14); }
+.glow-cyan { box-shadow: 0 0 28px rgba(6,182,212,0.22), 0 0 8px rgba(6,182,212,0.12); }
+
+/* ===================== BUTTONS ===================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 18px rgba(13,148,136,0.30), 0 1px 4px rgba(0,0,0,0.08);
+  transition: all 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(13,148,136,0.38), 0 2px 8px rgba(0,0,0,0.10);
+}
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: #0d9488;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid #0d9488;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-outline:hover {
+  background: #0d9488;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(13,148,136,0.25);
+  transform: translateY(-1px);
+}
+
+/* ===================== INPUTS ===================== */
+.input-wellness {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(240, 253, 250, 0.60);
+  border: 1.5px solid rgba(13,148,136,0.15);
+  border-radius: 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #0f172a;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: var(--font-sans);
+}
+.input-wellness:focus {
+  background: rgba(255,255,255,0.98);
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+}
+
+/* ===================== SECTION LABEL ===================== */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  background: rgba(13,148,136,0.08);
+  border: 1px solid rgba(13,148,136,0.16);
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0d9488;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ===================== HERO BLOBS ===================== */
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: blobFloat 9s ease-in-out infinite alternate;
+}
+@keyframes blobFloat {
+  from { transform: translate(0, 0) scale(1);     }
+  to   { transform: translate(14px, -18px) scale(1.06); }
+}
+
+/* ===================== SPECIALTY CHIP ===================== */
+.specialty-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(13,148,136,0.08);
+  border: 1px solid rgba(13,148,136,0.16);
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #0d9488;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ===================== LOADERS ===================== */
+.wellness-loader {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 3px solid rgba(13,148,136,0.15);
+  border-top-color: #0d9488;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===================== SHIMMER ===================== */
+.shimmer {
+  background: linear-gradient(90deg, #f0fdf9 25%, #e6fffa 50%, #f0fdf9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ===================== PAGE ENTER ===================== */
+.page-enter {
+  animation: pageEnter 0.45s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ===================== FEATURE ICON ===================== */
+.feature-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.875rem;
+  background: linear-gradient(135deg, rgba(13,148,136,0.12) 0%, rgba(6,182,212,0.08) 100%);
+  border: 1px solid rgba(13,148,136,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+.feature-icon:hover { transform: rotate(8deg) scale(1.1); }
+
+/* ===================== NAV ===================== */
+.active hr { display: block; }
+
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: rgba(241,245,249,0.4); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: linear-gradient(180deg, #0d9488, #06b6d4);
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 165, 233, 0.5);
-}
+/* ===================== IMAGES ===================== */
+img { user-select: none; -webkit-user-drag: none; }
